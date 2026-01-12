@@ -1,0 +1,187 @@
+:root{
+    --altura-nav: 70px;
+}
+
+body{
+    margin: 0;
+    width: 100%;
+    min-height: 100vh;
+    overflow-x: hidden;
+    background-color: #f2f0ea;
+}
+
+/*navbar*/
+header#bar {
+    position: fixed; /* Pega el header en la parte superior */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height:var(--altura-nav);
+    z-index: 1000; /* para que quede por encima de todo */
+    background-color: #fff; /* color de fondo, puedes poner transparente si quieres */
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  position: relative;
+  z-index: 10;
+}
+
+/* Logo centrado */
+.navbar .logo {
+  flex: 1;
+  text-align: center;
+}
+.navbar .logo img {
+  max-height: 60px;
+}
+
+
+.nav-links {
+  position: static;
+  top: 100%;
+  left: 0;
+  right: 0;
+  flex-direction: column;
+  background-color: #fff;
+  display: none; /* Ocultos por defecto */
+  padding: 15px 0;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  list-style: none;
+  margin: 0;
+}
+.nav-links.show {
+  display: flex; /* Se muestran al hacer click */
+}
+.nav-links li {
+  text-align: center;
+  padding: 10px 0;
+}
+.nav-links li a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+.nav-links li a:hover {
+  color: #cca02a;
+}
+
+/* Botón hamburguesa siempre visible */
+.menu-toggle {
+  font-size: 2rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 20;
+}
+
+/*page*/
+#page{
+    display:grid;
+    padding-top: var(--altura-nav);
+    text-align: center;
+}
+
+/* incio*/
+
+#inicio{
+    text-align: center;
+}
+
+
+
+#titulo{
+    font-family: 'Gwendolyn',cursive; /* o la que uses */
+    font-size: 80px;
+    padding:0;
+    margin:0;
+}
+
+#nuestra{
+    font-family: 'Playfair Display', serif;
+    font-weight: 700; /* bold */
+    font-style: italic;
+    font-size: 30px;
+    margin-top: 40px;
+}
+
+
+.separador{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: 10px 0;
+
+}
+
+.separador::before,
+.separador::after{
+    content: "";
+    flex: 1;
+    height: 1px;
+    background-color: #000000; /* tu color dorado */
+}
+
+.separador span{
+    margin: 0 15px;
+    font-size: 80px;
+    font-family: 'Gwendolyn'; /* o la que uses */
+    color: #000000;
+}
+
+/*presentacion*/
+#frase{
+    font-family: 'Playfair Display', serif;
+    font-weight: 600; /* bold */
+    font-style: italic;
+    font-size: 30px;
+    margin: 40px 20px 20px 20px;
+}
+
+#padres{
+    font-family: 'Playfair Display', serif;
+    font-weight: 600; /* bold */
+
+    font-size: 25px;
+    margin: 30px 20px 10px 20px;
+}
+
+#pas{
+    font-family: 'Playfair Display', serif;
+    font-weight: 400; 
+    font-size: 18px;
+    margin: 5px;
+}
+
+/*lugar*/
+.titulos{
+    font-family: 'Gwendolyn',cursive; /* o la que uses */
+    font-size: 80px;
+    padding:0;
+    margin:20px 0 20px 0;
+    color: #cca02a;
+}
+
+.separadores{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: 10px 0;
+    height: 1px;
+}
+
+.separadores::before,
+.separadores::after{
+    content: "";
+    flex: 1;
+    height: 1px;
+    background-color: #ffffff; /* tu color dorado */
+}

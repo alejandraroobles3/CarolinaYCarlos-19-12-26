@@ -1,0 +1,150 @@
+body{
+    height: 100vh;
+    width: 100vw;
+    justify-content: center;
+    align-items: center;
+    margin:0;
+    display: flex;
+    border:0;
+
+}
+
+:root{
+    --altura-nav:70px;
+}
+
+/*Desvanecimiento pagina */
+body.fade-in {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+body.fade-in.visible {
+    opacity: 1;
+}
+
+/*parte de loading*/
+#corazones{
+    position: relative;
+    width: 50%;
+    height: 100vh;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.corazon{
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 0;
+}
+
+.grande {
+    font-size: 120px;
+    color: rgba(204, 160, 42, 0.4); 
+    z-index: 1;
+    animation: latido 1.5s infinite;
+}
+
+.pequenio{
+    font-size: 80px;
+    color: #cca02a;
+    z-index: 2;
+    animation: latido 1.5s infinite;
+
+}
+
+/* ===========================
+   RESPONSIVE CORAZONES
+=========================== */
+@media (max-width: 768px) { /* tablets y móviles grandes */
+    #corazones {
+        width: 70%;      /* contenedor más ancho para pantallas pequeñas */
+        height: 60vh;    /* altura menor para que no ocupe todo el viewport */
+    }
+
+    .grande {
+        font-size: 90px; /* más pequeño en móviles */
+    }
+
+    .pequenio {
+        font-size: 60px; /* proporcional al grande */
+    }
+}
+
+@media (max-width: 480px) { /* móviles pequeños */
+    #corazones {
+        width: 90%;      /* casi todo el ancho */
+        height: 50vh;    /* menos altura para caber en pantalla */
+    }
+
+    .grande {
+        font-size: 70px; /* tamaño reducido */
+    }
+
+    .pequenio {
+        font-size: 45px; /* proporcional al grande */
+    }
+}
+
+
+/* parte de sobre*/
+#sobre img{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    inset: 0;
+    object-fit: contain;
+    transition: transform 1s ease-in-out;
+}
+
+#sobre{
+    position:relative;
+    width: 100vh;
+    height: 100%;
+    
+    perspective: 1000px;
+    aspect-ratio: 3/2; /* mantiene proporción del sobre */
+
+}
+@keyframes latido {
+    0% {
+        transform: scale(1);
+    }
+    25% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.fondo{
+    z-index: 1;
+}
+
+.frente{
+    z-index: 2;
+}
+
+.sello{
+    border:none;
+    position: absolute;
+    background: none;
+    cursor:pointer;
+    z-index: 3;
+    width: 50%;
+    height: 50%;
+    top: 50%;
+    left: 60%;
+    transform: translate(-50%, -50%);
+}
+
+.sello img {
+    animation: latido 1.5s infinite;
+}
+
+

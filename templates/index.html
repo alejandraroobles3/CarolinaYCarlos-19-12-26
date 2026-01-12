@@ -3,16 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Carolina & Orlando</title>
+    <link rel="stylesheet" href="static/styles2.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300..700;1,300..700&family=Gwendolyn:wght@400;700&family=MonteCarlo&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 </head>
-<body>
-  <header id="bar">
 
-  </header>  
-  <div id="page">
-    <div id="inicio"></div>
-    <div id="presentacion"></div>
-    <div id="lugar"></div>
+<body class="fade-in">
+  <header id="bar">
+    <nav class="navbar">
+      <!-- Logo centrado -->
+      <div class="logo">
+        <a href="#home">
+          <img id="logoimg" src="static/logo.png" alt="Logo">
+        </a>
+      </div>
+
+      <!-- Links principales -->
+      <ul class="nav-links">
+        <li><a href="#inicio">Inicio</a></li>
+        <li><a href="#presentacion">Presentación</a></li>
+        <li><a href="#lugar">Lugar</a></li>
+        <li><a href="#vestimenta">Vestimenta</a></li>
+        <li><a href="#regalos">Regalos</a></li>
+        <li><a href="#asistencia">Asistencia</a></li>
+        <li><a href="#hospedaje">Hospedaje</a></li>
+      </ul>
+
+      <!-- Botón tipo hamburguesa siempre visible -->
+      <button class="menu-toggle" aria-label="Toggle Menu">
+        &#9776;
+      </button>
+    </nav>
+  </header>
+  
+  <div  id="page">
+    <div id="inicio">
+      <h2 id="nuestra">Nuestra Boda</h2>
+      <h1 id="titulo">Carolina</h1>
+      <div class="separador"><span>&</span></div>
+      <h1 id="titulo">Orlando</h1>
+      <h2 id="nuestra">19.Diciembre.2026</p>
+    </div>
+    <div id="presentacion">
+      <h1 id="frase">Junto a nuestros padres, queremos invitarles a compartir el día en el que daremos el ¡Sí!</h1>
+      <h3 id="padres">Padres de la novia</h2>
+      <p id="pas">Adrian Robles Osorio</p>
+      <p id="pas">María de Jesus Mora Flores</p>
+      <h3 id="padres">Padres del novio</h2>
+      <p id="pas">mama de orlando</p>
+      <p id="pas">abuelo de orlando?</p>
+      <h3 id="padres">Padrinos</h2>
+      <p id="pas">padrino1</p>
+      <p id="pas">padrino 2</p>
+      <h2 id="frase">El amor nos unió, ahora queremos compartirlo contigo.</h2>
+    </div>
+    <div class="separadores"></div>
+    <div id="lugar">
+      <h1 class="titulos">¿Cuando y donde?</h1>
+      <h2>19.Diciembre.2026</h2>
+      <h3>San Cristóbal de las Casas, Chiapas</h3>
+      <h2>Ceremonia</h2>
+      <!--<img src="static/hotel.jpg" alt="Ceremonia">-->
+      <p>Hotel Diego de Mazariegos</p>
+      <p>Maria Adelina Flores 2, Centro, San Cristóbal de Las Casas, México</p>
+      <h4>3:00 pm</h4>
+      <button type="button">Ver Mapa</button>
+    </div>
     <div id="vestimenta"></div>
     <div id="regalos"></div>
     <div id="asistencia"></div>
@@ -21,5 +79,6 @@
   <footer id="footer">
 
   </footer>
+  <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>
 </html>
