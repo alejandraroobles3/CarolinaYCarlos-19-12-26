@@ -1,6 +1,15 @@
 :root{
     --altura-nav: 70px;
 }
+/*Desvanecimiento pagina */
+body.fade-in {
+    opacity: 0;
+    transition: opacity 1.0s ease-in-out;
+}
+
+body.fade-in.visible {
+    opacity: 1;
+}
 
 body{
     margin: 0;
@@ -84,8 +93,11 @@ header#bar {
 /*page*/
 #page{
     display:grid;
+    display: flex;
     padding-top: var(--altura-nav);
     text-align: center;
+    flex-direction: column;
+    align-items: center;
 }
 
 /* incio*/
@@ -116,8 +128,8 @@ header#bar {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    margin: 10px 0;
+    width: 90%;
+    margin: 10px 30px;
 
 }
 
@@ -161,6 +173,10 @@ header#bar {
 }
 
 /*lugar*/
+#lugar{
+    align-items: center;
+    justify-content: center;
+}
 .titulos{
     font-family: 'Gwendolyn',cursive; /* o la que uses */
     font-size: 80px;
@@ -184,4 +200,62 @@ header#bar {
     flex: 1;
     height: 1px;
     background-color: #ffffff; /* tu color dorado */
+}
+
+.imagenes{
+    display: block;
+    width: 65%;
+    height: 30%;
+    margin: 0 auto;
+}
+
+/*botones de la pagina*/
+button {
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+  padding: 3px 32px;
+  border-radius: 100px;
+  background: #ecd89e;
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  margin: 0 auto;
+}
+
+button:hover {
+  background: #ecd89e;
+}
+
+button > svg {
+  width: 25px;
+  margin-left: 10px;
+  transition: transform 0.3s ease-in-out;
+}
+
+button:hover svg {
+  transform: translateX(5px);
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+.btn-wrapper {
+  display: inline-block;
+  margin: 25px auto;
+  text-decoration: none;
+}
+
+.imagenes-chicas{
+    display: block;
+    width: 35%;
+    height: 20%;
+    margin: 40px auto 0 auto;
+}
+
+#regalos{
+    align-items: center;
+    justify-content: center;
 }
