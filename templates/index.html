@@ -56,9 +56,6 @@
       <p id="pas">Maria Elena Garcia Hernandez</p>
       <p id="pas">Herlindo Garcia Gomez</p>
       <p id="pas">Zenaida Hernandez Morales</p>
-      <h3 id="padres">Padrinos</h2>
-      <p id="pas">padrino1</p>
-      <p id="pas">padrino 2</p>
       <h2 id="frase">El amor nos unió, ahora queremos compartirlo contigo.</h2>
     </div>
     <div class="separadores"></div>
@@ -136,7 +133,7 @@
         <img class="imagenes-chicas" src="static/amazon.png" alt="amazon">
       </a>
       <a
-        href="https://maps.app.goo.gl/Sj1jdej1eajo2TB17"
+        href="https://www.amazon.com.mx/hz/wishlist/ls/8AKSC2NHAU90?ref_=wl_share"
         target="_blank"
         class="btn-wrapper"
       >  
@@ -158,6 +155,28 @@
         </button>
       </a>
       <p>ver lo de la lluvia de sobres</p>
+      <div class="mi-toggle">
+        <div class="mi-toggle-title" tabindex="0">
+          <img src="https://nuestraboda.love/nellyyeibar/wp-content/uploads/sites/2047/2023/08/Sobre-1.svg" alt="" width="36">
+          Lluvia de sobres
+          <span class="icon">▼</span>
+        </div>
+
+        <div class="mi-toggle-content" style="display: none;">
+          <p>
+            <a href="https://nuestraboda.love/nellyyeibar/wp-content/uploads/sites/2047/2023/08/BBVA.svg" target="_blank">
+              <img src="https://nuestraboda.love/nellyyeibar/wp-content/uploads/sites/2047/2023/08/BBVA.svg" alt="" width="141" height="47">
+            </a>
+          </p>
+          <p>Número de Cuenta:<br><strong>2867446241</strong></p>
+          <p>Número de CLABE:<br><strong>0123 2002 8674 462410</strong></p>
+          <p>Eibar de Jesus Quezada Gonzalez</p>
+        </div>
+      </div>
+
+  
+  
+
       <p id="pas">Agradecemos cualquier muestra de cariño, por tratarse de una boda destino, les pedimos no llevar regalos al viaje</p>
     </div>
     <div class="separadores"></div>
@@ -166,53 +185,140 @@
       <p id="pas">Sería un honor para nosotros contar con tu prescencia</p>
       <p id="pas">Confirma tu asistencia antes del 31 de marzo con los pases de tu vuelo</p>
       <div id="cuadro">
-        <form action="" method="POST" enctype="multipart/form-data">
-          <label>Nombre Completo:</label>
-          <input type="text" name="nombre">
+        <form class="form" method="POST" enctype="multipart/form-data">
+            <div class="flex">
+              <label>
+                  <input required="" placeholder="" type="text" class="input">
+                  <span>Nombre</span>
+              </label>
+              <label>
+                  <input required="" placeholder="" type="text" class="input">
+                  <span>Apellido</span>
+              </label>
+          </div>  
+          <div class="radio-group"> 
+            <p class="letra">¿Asistirás?</p>
+            <label class="radio-option">
+              <input type="radio" name="tiene_email" value="si" onclick="toggleEmail(true)" checked>
+              <span class="letra">Sí asistiré</span>
+            </label>
 
-          <p>¿Asistirás?</p>
-          <label><input type="radio" name="asiste" onclick="toggleInvitados(true)"> Sí</label>
-          <label><input type="radio" name="asiste" onclick="toggleInvitados(false)"> No</label>
-
-          <div id="invitados" style="display:none;">
-            <label>Adultos:</label>
-            <input type="number" >
-            <label>Niños:</label>
-            <input type="number" placeholder="De 0 - 11 años">
+            <label class="radio-option">
+              <input type="radio" name="tiene_email" value="no" onclick="toggleEmail(false)">
+              <span class="letra">No, lo siento</span>
+            </label>
+          </div>
+          <p class="letra" style="margin-bottom: 0; margin-top: 10px;">Numero de invitados</p>
+          <div class="flex">
+            <label>
+              <input required placeholder="" type="text" class="input input2">
+              <span class="letra">Adultos (+11)</span>
+            </label>
+            <label>
+              <input required placeholder="" type="text" class="input input2">
+              <span class="letra">Niños ( 0-11 años)</span>
+            </label>
           </div>
 
-          <label>Sube una imagen:</label>
-          <input type="file" accept="image/*">
-          <button type="submit">
-              <span>Enviar</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 74 74"
-                height="34"
-                width="34"
-              >
-                <circle stroke-width="3" stroke="black" r="35.5" cy="37" cx="37"></circle>
-                <path
-                  fill="black"
-                  d="M25 35.5C24.1716 35.5 23.5 36.1716 23.5 37C23.5 37.8284 24.1716 38.5 25 38.5V35.5ZM49.0607 38.0607C49.6464 37.4749 49.6464 36.5251 49.0607 35.9393L39.5147 26.3934C38.9289 25.8076 37.9792 25.8076 37.3934 26.3934C36.8076 26.9792 36.8076 27.9289 37.3934 28.5147L45.8787 37L37.3934 45.4853C36.8076 46.0711 36.8076 47.0208 37.3934 47.6066C37.9792 48.1924 38.9289 48.1924 39.5147 47.6066L49.0607 38.0607ZM25 38.5L48 38.5V35.5L25 35.5V38.5Z"
-                ></path>
-              </svg>
-          </button>
+          <p class="letra" style="margin-bottom: 0; margin-top: 10px;">Sube la imagen de tu pase de abordar</p>
+          <label class="file-upload input2">
+            <input
+              type="file"
+              name="archivo"
+              accept="image/*"
+              required
+              id="file-input"
+            >
+            <span class="letra file-text">Subir imagen</span>
+            <span class="letra file-name" id="file-name">Ningún archivo seleccionado</span>
+          </label>
+
+
+          <button class="submit">Submit</button>
         </form>
       </div>
     </div>
-    <div id="hospedaje"></div>
+    <div class="separadores"></div>
+    <div id="hospedaje">
+      <h1 class="titulos">Hospedaje en el destino</h1>
+      <p id="pas">Para nosotros, lo más importante es que estes ahí, sientete libre de buscar la opción de hospedaje que mas te convenga.</p>
+      <p id="pas">Sin embargo para tu comodidad, hemos gestionado una tarifa preferencial en el hotel Diego de Mazariegos. Solo debes mencionar "Boda Carolina y Carlos" al hacer tu reserva</p>
+      <a
+        href="/static/tarifas.pdf"
+        target="_blank"
+        class="btn-wrapper"
+      >  
+        <button>
+          <span>Ver Tarifas Especiales</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 74 74"
+            height="34"
+            width="34"
+          >
+            <circle stroke-width="3" stroke="black" r="35.5" cy="37" cx="37"></circle>
+            <path
+              fill="black"
+              d="M25 35.5C24.1716 35.5 23.5 36.1716 23.5 37C23.5 37.8284 24.1716 38.5 25 38.5V35.5ZM49.0607 38.0607C49.6464 37.4749 49.6464 36.5251 49.0607 35.9393L39.5147 26.3934C38.9289 25.8076 37.9792 25.8076 37.3934 26.3934C36.8076 26.9792 36.8076 27.9289 37.3934 28.5147L45.8787 37L37.3934 45.4853C36.8076 46.0711 36.8076 47.0208 37.3934 47.6066C37.9792 48.1924 38.9289 48.1924 39.5147 47.6066L49.0607 38.0607ZM25 38.5L48 38.5V35.5L25 35.5V38.5Z"
+            ></path>
+          </svg>
+        </button>
+      </a>
+    </div>
+    <div id="despedida">
+      <div class="imgen">
+
+      </div>
+      <div class="text-arriba">
+
+      </div>
+    </div>
   </div>
   <footer id="footer">
-
+    <p>Hecho con &hearts;   .</p>
+    <p>  &copy; Copyright 2026. Todos los derechos reservados</p>
   </footer>
   <script src="{{ url_for('static', filename='main.js') }}"></script>
+  <script>
+  const fileInput = document.getElementById("file-input");
+  const fileName = document.getElementById("file-name");
+
+  fileInput.addEventListener("change", () => {
+    if (fileInput.files.length > 0) {
+      fileName.textContent = fileInput.files[0].name;
+    } else {
+      fileName.textContent = "Ningún archivo seleccionado";
+    }
+  });
+</script>
+
   <script>
   function toggleInvitados(mostrar) {
     const invitados = document.getElementById("invitados");
     invitados.style.display = mostrar ? "block" : "none";
   }
 </script>
+<script>
+function toggleEmail(activar) {
+  // Inputs de nombre y apellido
+  const inputs = document.querySelectorAll('.input2');
+  inputs.forEach(input => {
+    input.disabled = !activar;
+    if (!activar) input.value = ''; // opcional: limpiar campos
+  });
+
+  // Input de archivo
+  const fileInput = document.getElementById('file-input');
+  const fileName = document.getElementById('file-name');
+
+  fileInput.disabled = !activar;
+  if (!activar) {
+    fileInput.value = '';
+    fileName.textContent = 'Ningún archivo seleccionado';
+  }
+}
+</script>
+
 </body>
 </html>

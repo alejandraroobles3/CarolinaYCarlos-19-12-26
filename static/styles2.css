@@ -259,3 +259,255 @@ button:active {
     align-items: center;
     justify-content: center;
 }
+
+/*para subir archivo*/
+/* From Uiverse.io by Yaya12085 */
+#cuadro{
+  display: flex;
+  align-items: center;
+    justify-content: center;
+  margin:30px;
+} 
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 350px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 20px;
+  position: relative;
+}
+
+
+.signin {
+  color: rgba(88, 87, 87, 0.822);
+  font-size: 14px;
+}
+
+.signin {
+  text-align: center;
+}
+
+.signin a {
+  color: #ecd89e;
+}
+
+.signin a:hover {
+  text-decoration: underline #ecd89e;
+}
+
+.flex {
+  display: flex;
+  width: 100%;
+  gap: 10px;
+}
+
+.form label {
+  position: relative;
+}
+
+.form label .input {
+  width: 100%;
+  padding: 10px 10px 20px 10px;
+  outline: 0;
+  border: 1px solid rgba(105, 105, 105, 0.397);
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+.form label .input + span {
+  position: absolute;
+  left: 10px;
+  top: 15px;
+  color: grey;
+  font-size: 0.9em;
+  cursor: text;
+  transition: 0.3s ease;
+}
+
+.form label .input:placeholder-shown + span {
+  top: 15px;
+  font-size: 0.9em;
+}
+
+.form label .input:focus + span,.form label .input:valid + span {
+  top: 30px;
+  font-size: 0.7em;
+  font-weight: 600;
+}
+
+.form label .input:valid + span {
+  color: green;
+}
+
+.submit {
+  border: none;
+  outline: none;
+  background-color: #ecd89e;
+  padding: 10px;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 16px;
+  transform: .3s ease;
+}
+
+.submit:hover {
+  background-color: rgb(56, 90, 194);
+}
+
+@keyframes pulse {
+  from {
+    transform: scale(0.9);
+    opacity: 1;
+  }
+
+  to {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+.radio-group {
+  display: flex;
+  gap: 12px;
+}
+
+.radio-option {
+  position: relative;
+  cursor: pointer;
+}
+
+/* ocultamos el radio nativo */
+.radio-option input {
+  display: none;
+}
+
+/* estilo tipo pill */
+.radio-option span {
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: 2px solid #d0d0d0;
+  font-size: 14px;
+  transition: all 0.25s ease;
+  user-select: none;
+}
+
+/* seleccionado */
+.radio-option input:checked + span {
+  background-color: #ecd89e;
+  color: white;
+  border-color: #ecd89e;
+}
+
+/* hover */
+.radio-option span:hover {
+  border-color: #ecd89e;
+}
+
+
+.radio-group {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 16px;
+}
+
+/* el texto ocupa su espacio */
+.radio-group p {
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* cada opción se puede estirar */
+.radio-option {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.file-upload {
+  display: block;
+  border: 2px dashed #ccc;
+  padding: 16px;
+  border-radius: 12px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.file-upload:hover {
+  border-color: #ecd89e;
+}
+
+.file-upload input[type="file"] {
+  display: none;
+}
+
+.file-text {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.file-name {
+  font-size: 13px;
+  color: #666;
+}
+
+.letra{
+  font-family: 'Playfair Display', serif;
+  font-weight: 400; 
+  font-size: 16px;
+}
+
+
+.input2:disabled {
+  background-color: #f2f2f2; /* gris claro */
+  cursor: not-allowed;
+  opacity: 0.6; /* se ve “inactivo” */
+}
+
+.file-upload .input2:disabled + .file-text {
+  color: #aaa; /* texto del botón de upload más gris */
+}
+
+.file-upload:has(input:disabled) {
+  background-color: #f2f2f2;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.file-upload:has(input:disabled) .file-text {
+  color: #aaa;
+}
+
+#footer{
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mi-toggle {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px;
+  max-width: 400px;
+}
+
+.mi-toggle-title {
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mi-toggle-title .icon {
+  margin-left: auto;
+  transition: transform 0.3s;
+}
+
+.mi-toggle-content {
+  margin-top: 10px;
+}
