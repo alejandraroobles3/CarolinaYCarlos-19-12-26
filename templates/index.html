@@ -154,30 +154,20 @@
           </svg>
         </button>
       </a>
-      <p>ver lo de la lluvia de sobres</p>
+      <div class="margenes"></div>
       <div class="mi-toggle">
         <div class="mi-toggle-title" tabindex="0">
-          <img src="https://nuestraboda.love/nellyyeibar/wp-content/uploads/sites/2047/2023/08/Sobre-1.svg" alt="" width="36">
+          <img src="/static/sobre.png" alt="" width="56">
           Lluvia de sobres
           <span class="icon">▼</span>
         </div>
 
         <div class="mi-toggle-content" style="display: none;">
-          <p>
-            <a href="https://nuestraboda.love/nellyyeibar/wp-content/uploads/sites/2047/2023/08/BBVA.svg" target="_blank">
-              <img src="https://nuestraboda.love/nellyyeibar/wp-content/uploads/sites/2047/2023/08/BBVA.svg" alt="" width="141" height="47">
-            </a>
-          </p>
-          <p>Número de Cuenta:<br><strong>2867446241</strong></p>
-          <p>Número de CLABE:<br><strong>0123 2002 8674 462410</strong></p>
-          <p>Eibar de Jesus Quezada Gonzalez</p>
+          <img src="/static/sobre_adentro.png" alt="">
+          <p >Si lo deseas, habrá un espacio para dejar tu regalo en efectivo dentro de un sobre.</p>
         </div>
       </div>
-
-  
-  
-
-      <p id="pas">Agradecemos cualquier muestra de cariño, por tratarse de una boda destino, les pedimos no llevar regalos al viaje</p>
+      <p id="pas" >Agradecemos cualquier muestra de cariño, por tratarse de una boda destino, les pedimos no llevar regalos al viaje</p>
     </div>
     <div class="separadores"></div>
     <div id="asistencia">
@@ -188,34 +178,35 @@
         <form class="form" method="POST" enctype="multipart/form-data">
             <div class="flex">
               <label>
-                  <input required="" placeholder="" type="text" class="input">
+                  <input required="" placeholder="" type="text" name="nombre" class="input">
                   <span>Nombre</span>
               </label>
               <label>
-                  <input required="" placeholder="" type="text" class="input">
+                  <input required="" placeholder="" type="text" name="apellido" class="input">
                   <span>Apellido</span>
               </label>
           </div>  
           <div class="radio-group"> 
             <p class="letra">¿Asistirás?</p>
             <label class="radio-option">
-              <input type="radio" name="tiene_email" value="si" onclick="toggleEmail(true)" checked>
-              <span class="letra">Sí asistiré</span>
+              <input type="radio" name="asiste" value="si" onclick="toggleInvitados(true)" checked>
+              <span class="letra">Sí, asistiré</span>
             </label>
 
             <label class="radio-option">
-              <input type="radio" name="tiene_email" value="no" onclick="toggleEmail(false)">
+              <input type="radio" name="asiste" value="no" onclick="toggleInvitados(false)">
               <span class="letra">No, lo siento</span>
             </label>
           </div>
           <p class="letra" style="margin-bottom: 0; margin-top: 10px;">Numero de invitados</p>
+          <div id="invitados" class="desactivado">
           <div class="flex">
             <label>
-              <input required placeholder="" type="text" class="input input2">
+              <input required placeholder="" type="text" name="adultos" class="input input2">
               <span class="letra">Adultos (+11)</span>
             </label>
             <label>
-              <input required placeholder="" type="text" class="input input2">
+              <input required placeholder="" type="text" name="ninios" class="input input2">
               <span class="letra">Niños ( 0-11 años)</span>
             </label>
           </div>
@@ -232,6 +223,7 @@
             <span class="letra file-text">Subir imagen</span>
             <span class="letra file-name" id="file-name">Ningún archivo seleccionado</span>
           </label>
+          </div>
 
 
           <button class="submit">Submit</button>
@@ -266,12 +258,11 @@
         </button>
       </a>
     </div>
-    <div id="despedida">
-      <div class="imgen">
-
-      </div>
+    <div class="seccion" >
+      <img src="/static/footer.jpg" alt="">
       <div class="text-arriba">
-
+        <h1>Carolina & Carlos</h1>
+        <p>19 · 12 · 26</p>
       </div>
     </div>
   </div>
@@ -281,44 +272,27 @@
   </footer>
   <script src="{{ url_for('static', filename='main.js') }}"></script>
   <script>
-  const fileInput = document.getElementById("file-input");
-  const fileName = document.getElementById("file-name");
 
-  fileInput.addEventListener("change", () => {
-    if (fileInput.files.length > 0) {
-      fileName.textContent = fileInput.files[0].name;
+    function toggleInvitados(mostrar) {
+    const contenedor = document.getElementById("invitados");
+    const inputs = contenedor.querySelectorAll("input");
+
+    if (mostrar) {
+        contenedor.classList.remove("desactivado");
+        inputs.forEach(input => {
+        input.disabled = false;
+        input.required = true;
+        });
     } else {
-      fileName.textContent = "Ningún archivo seleccionado";
+        contenedor.classList.add("desactivado");
+        inputs.forEach(input => {
+        input.disabled = true;
+        input.required = false;
+        input.value = "";
+        });
     }
-  });
-</script>
-
-  <script>
-  function toggleInvitados(mostrar) {
-    const invitados = document.getElementById("invitados");
-    invitados.style.display = mostrar ? "block" : "none";
-  }
-</script>
-<script>
-function toggleEmail(activar) {
-  // Inputs de nombre y apellido
-  const inputs = document.querySelectorAll('.input2');
-  inputs.forEach(input => {
-    input.disabled = !activar;
-    if (!activar) input.value = ''; // opcional: limpiar campos
-  });
-
-  // Input de archivo
-  const fileInput = document.getElementById('file-input');
-  const fileName = document.getElementById('file-name');
-
-  fileInput.disabled = !activar;
-  if (!activar) {
-    fileInput.value = '';
-    fileName.textContent = 'Ningún archivo seleccionado';
-  }
-}
-</script>
+    }
+  </script>
 
 </body>
 </html>
