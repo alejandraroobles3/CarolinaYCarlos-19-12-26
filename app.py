@@ -4,16 +4,16 @@ import os
 from pydrive2.auth import GoogleAuth
 from pydrive2.drive import GoogleDrive
 import gspread
-from oauth2client.service_acount import ServiceAccountCredentials
+from oauth2client.service_account import ServiceAccountCredentials
 
 #para activar entorno virtual es:
-#venv\bin\activate.bat
+#venv\Scripts\activate.bat
 #y luego python app.py
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER']='uploads'
 
-gauth=
+#gauth=
 
 @app.route("/")
 def index():
