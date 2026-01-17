@@ -175,7 +175,7 @@
       <p id="pas">Sería un honor para nosotros contar con tu prescencia</p>
       <p id="pas">Confirma tu asistencia antes del 31 de marzo con los pases de tu vuelo</p>
       <div id="cuadro">
-        <form class="form" method="POST" enctype="multipart/form-data">
+        <form class="form"  action="/enviar" method="POST" enctype="multipart/form-data">
             <div class="flex">
               <label>
                   <input required="" placeholder="" type="text" name="nombre" class="input">
@@ -215,8 +215,8 @@
           <label class="file-upload input2">
             <input
               type="file"
-              name="archivo"
               accept="image/*"
+              name="foto"
               required
               id="file-input"
             >
