@@ -2,3 +2,11 @@ Flask
 gspread
 oauth2client
 pydrive2
+
+
+#client_secrets.json
+{"installed":{"client_id":"766695718684-me3l29mkv09ishqgeoagtit1up2o34d3.apps.googleusercontent.com","project_id":"invitadosboda-484522","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"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","redirect_uris":["http://localhost"]}}
+
+
+#token.json
+{"access_token": "ya29.a0AUMWg_Iu4DPuFCxyOVn4zqOM8gkg30ems5Xrg2PrQAUhRoNggngYAxS9Gcpu6sdTKSlz05VpwSoch2eYncURufDRJSArXPxANGx5cmgRc-S-hJjK9no_EgeX1CVRB_Q-HxAhSdPMsQeUtibyPc-3iabXvzQJm6VNWwvxixFSMhGVPE2Ehk5ggHXXrrhceiFBoOby86oaCgYKAaoSARQSFQHGX2MiDMXeahQkLHlCO2aZKfnZXg0206", "client_id": "766695718684-me3l29mkv09ishqgeoagtit1up2o34d3.apps.googleusercontent.com", "client_secret": "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", "refresh_token": null, "token_expiry": "2026-01-19T23:35:07Z", "token_uri": "https://oauth2.googleapis.com/token", "user_agent": null, "revoke_uri": "https://oauth2.googleapis.com/revoke", "id_token": null, "id_token_jwt": null, "token_response": {"access_token": "ya29.a0AUMWg_Iu4DPuFCxyOVn4zqOM8gkg30ems5Xrg2PrQAUhRoNggngYAxS9Gcpu6sdTKSlz05VpwSoch2eYncURufDRJSArXPxANGx5cmgRc-S-hJjK9no_EgeX1CVRB_Q-HxAhSdPMsQeUtibyPc-3iabXvzQJm6VNWwvxixFSMhGVPE2Ehk5ggHXXrrhceiFBoOby86oaCgYKAaoSARQSFQHGX2MiDMXeahQkLHlCO2aZKfnZXg0206", "expires_in": 3599, "scope": "https://www.googleapis.com/auth/drive", "token_type": "Bearer", "refresh_token_expires_in": 604799}, "scopes": ["https://www.googleapis.com/auth/drive"], "token_info_uri": "https://oauth2.googleapis.com/tokeninfo", "invalid": false, "_class": "OAuth2Credentials", "_module": "oauth2client.client"}
