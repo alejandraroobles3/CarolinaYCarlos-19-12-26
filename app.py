@@ -14,7 +14,7 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER']='uploads'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-#drive
+
 
 scope = [
     'https://www.googleapis.com/auth/drive',
@@ -23,8 +23,23 @@ scope = [
 
 creds = ServiceAccountCredentials.from_json_keyfile_name('credentials.json', scope)
 
+#drive
 gauth = GoogleAuth()
-gauth.credentials = creds
+gauth.LoadClientConfigFile("client_secrets.json")  # tu archivo descargado
+gauth.LoadCredentialsFile("token.json")
+
+
+if gauth.credentials is None:
+    # Primera vez que se corre: abre navegador para autorizar
+    gauth.LocalWebserverAuth()
+elif gauth.access_token_expired:
+    # Si el token expiró, refrescarlo
+    gauth.Refresh()
+else:
+    gauth.Authorize()
+
+gauth.SaveCredentialsFile("token.json")
+
 drive = GoogleDrive(gauth)
 
 gc = gspread.authorize(creds)
@@ -49,10 +64,13 @@ def sobre():
     return render_template("sobre.html")
 
 
-@app.route("/pagina")
+@app.route("/pagina", methods=["POST","GET"])
 def pagina():
-    #aqui ponemos la carta que se abre? 
-    return render_template("index.html")
+    #aqui ponemos la carta que se abre?
+    if request.method == "POST": 
+        return render_template("index.html")
+    else: 
+        return render_template("index.html")
 
 
 @app.route("/enviar", methods=["POST","GET"])
@@ -68,22 +86,26 @@ def enviar():
         archivo = request.files.get('foto')
 
         if archivo:
-            ruta_local=os.path.join(app.config['UPLOAD_FOLDER'], archivo.filename)
+            ruta_local = os.path.join(app.config['UPLOAD_FOLDER'], archivo.filename)
             archivo.save(ruta_local)
 
-            #subir a drive
-            archivo_drive=drive.CreateFile({'title':archivo.filename})
+            # Subir a tu Drive
+            archivo_drive = drive.CreateFile({'title': archivo.filename, 'parents': [{'id': '1K-uqMefDDWUruS_9tHItqmHl5X4xtcww'}]})
             archivo_drive.SetContentFile(ruta_local)
             archivo_drive.Upload()
+
+            # Dar permiso de lectura (opcional)
             archivo_drive.InsertPermission({
                 'type': 'anyone',
                 'value': 'anyone',
                 'role': 'reader'
             })
-            link_drive =archivo_drive['alternateLink']
+
+            link_drive = archivo_drive['alternateLink']
 
         else:
             link_drive=""
+    
         
         sheet.append_row([
             nombre,
@@ -93,7 +115,7 @@ def enviar():
             ninios,
             link_drive
         ])
-        return render_template("index.html")
+        return render_template("exito.html")
         
         
     elif request.method == "GET":
@@ -101,5 +123,7 @@ def enviar():
 
     else:
         return render_template("index.html")
+    
+
 if __name__ == "__main__":
     app.run(debug=True)
