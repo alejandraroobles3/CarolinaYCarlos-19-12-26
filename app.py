@@ -6,6 +6,8 @@ from pydrive2.drive import GoogleDrive
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
+
+
 #para activar entorno virtual es:
 #venv\Scripts\activate.bat
 #y luego python app.py
@@ -14,36 +16,53 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER']='uploads'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
+gauth = GoogleAuth()
 
+# Archivo descargado de Google Cloud
+gauth.LoadClientConfigFile("client_secrets.json")
 
-scope = [
+# Configurar backend de credenciales
+gauth.settings['save_credentials'] = True
+gauth.settings['save_credentials_file'] = "token.json"
+gauth.settings['get_refresh_token'] = True
+gauth.settings['oauth_scope'] = [
     'https://www.googleapis.com/auth/drive',
     'https://www.googleapis.com/auth/spreadsheets'
 ]
 
-creds = ServiceAccountCredentials.from_json_keyfile_name('credentials.json', scope)
-
-#drive
-gauth = GoogleAuth()
-gauth.LoadClientConfigFile("client_secrets.json")  # tu archivo descargado
+# Cargar token si existe
 gauth.LoadCredentialsFile("token.json")
 
-
+# Autenticar según estado
 if gauth.credentials is None:
-    # Primera vez que se corre: abre navegador para autorizar
+    # Primera vez: abrir navegador (solo local)
     gauth.LocalWebserverAuth()
 elif gauth.access_token_expired:
-    # Si el token expiró, refrescarlo
     gauth.Refresh()
 else:
     gauth.Authorize()
 
+# Guardar token actualizado
 gauth.SaveCredentialsFile("token.json")
 
+# Conexión con Drive
 drive = GoogleDrive(gauth)
 
+# -------------------------
+# Configuración Sheets (Service Account)
+# -------------------------
+scope = [
+    'https://www.googleapis.com/auth/spreadsheets',
+    'https://www.googleapis.com/auth/drive'
+]
+
+creds = ServiceAccountCredentials.from_json_keyfile_name(
+    'credentials.json', scope
+)
 gc = gspread.authorize(creds)
-sheet = gc.open_by_key("1My2rjonxDkY1CsLDsOmC1N_j60DdfH5RB2EcMSlqlOE").sheet1
+sheet = gc.open_by_key(
+    "1My2rjonxDkY1CsLDsOmC1N_j60DdfH5RB2EcMSlqlOE"
+).sheet1
 
 
 @app.route("/")
@@ -73,57 +92,48 @@ def pagina():
         return render_template("index.html")
 
 
-@app.route("/enviar", methods=["POST","GET"])
+@app.route("/enviar", methods=["POST"])
 def enviar():
-    #aqui ponemos la carta que se abre? 
-    if request.method == "POST":
-        nombre=request.form.get("nombre")
-        apellido=request.form.get("apellido")
-        adultos=request.form.get("adultos")
-        ninios=request.form.get("ninios")
-        siva=request.form.get("asiste")
+    nombre = request.form.get("nombre")
+    apellido = request.form.get("apellido")
+    adultos = request.form.get("adultos")
+    ninios = request.form.get("ninios")
+    siva = request.form.get("asiste")
 
-        archivo = request.files.get('foto')
+    archivo = request.files.get("foto")
+    link_drive = ""
 
-        if archivo:
-            ruta_local = os.path.join(app.config['UPLOAD_FOLDER'], archivo.filename)
-            archivo.save(ruta_local)
+    if archivo and archivo.filename:
+        # Genera nombre único para evitar duplicados
+        filename = f"{nombre}_{apellido}_{int(time.time())}_{archivo.filename}"
+        ruta_local = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        archivo.save(ruta_local)
 
-            # Subir a tu Drive
-            archivo_drive = drive.CreateFile({'title': archivo.filename, 'parents': [{'id': '1K-uqMefDDWUruS_9tHItqmHl5X4xtcww'}]})
-            archivo_drive.SetContentFile(ruta_local)
-            archivo_drive.Upload()
+         # Subir archivo a Drive
+        archivo_drive = drive.CreateFile({'title': filename})
+        archivo_drive.SetContentFile(ruta_local)
+        archivo_drive.Upload()
 
-            # Dar permiso de lectura (opcional)
-            archivo_drive.InsertPermission({
-                'type': 'anyone',
-                'value': 'anyone',
-                'role': 'reader'
-            })
+        # Permiso de lectura pública
+        archivo_drive.InsertPermission({
+            'type': 'anyone',
+            'value': 'anyone',
+            'role': 'reader'
+        })
 
-            link_drive = archivo_drive['alternateLink']
+        link_drive = archivo_drive['alternateLink']
 
-        else:
-            link_drive=""
-    
-        
-        sheet.append_row([
-            nombre,
-            apellido,
-            siva,
-            adultos,
-            ninios,
-            link_drive
-        ])
-        return render_template("exito.html")
-        
-        
-    elif request.method == "GET":
-        return render_template("index.html")
+    # Guardar datos en Google Sheets
+    sheet.append_row([
+        nombre,
+        apellido,
+        siva,
+        adultos,
+        ninios,
+        link_drive
+    ])
 
-    else:
-        return render_template("index.html")
-    
+    return render_template("exito.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
