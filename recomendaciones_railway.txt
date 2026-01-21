@@ -1,0 +1,67 @@
+Desplegar una aplicación que usa OAuth2 en servidores "Serverless" como Vercel o Railway requiere cambios importantes, porque en la nube no puedes abrir una ventana del navegador para loguearte y los archivos que guardes (como mycreds.txt) pueden borrarse al reiniciar el servidor.
+Aquí las modificaciones necesarias para 2026:
+1. Configurar la "URI de Redirección" en Google Cloud
+Como ya no estarás en localhost, Google debe saber a dónde enviar el token:
+Ve a Google Cloud Console.
+En Credenciales, edita tu "ID de cliente OAuth".
+En URIs de redireccionamiento autorizados, añade la URL de tu app en producción:
+https://tu-app.railway.app (ejemplo).
+Nota: Vercel es difícil para esto porque usa URLs dinámicas; Railway es más estable para Flask.
+2. No usar archivos para las credenciales
+En servidores como Railway o Vercel, el sistema de archivos es "efímero" (se borra). Lo mejor es guardar el contenido de mycreds.txt y client_secrets.json en Variables de Entorno.
+Pasos:
+Copia todo el texto dentro de tu mycreds.txt local.
+En el panel de Railway/Vercel, crea una variable llamada GOOGLE_CREDENTIALS_DATA.
+Crea otra llamada CLIENT_SECRETS_DATA con el contenido del archivo JSON.
+3. Modificar el código de autenticación
+Cambia la función login_drive para que lea de las variables de entorno en lugar de archivos físicos:
+python
+import os
+import json
+from pydrive2.auth import GoogleAuth
+from pydrive2.drive import GoogleDrive
+
+def login_drive():
+    gauth = GoogleAuth()
+    
+    # 1. Cargar la configuración del cliente desde variable de entorno
+    client_data = os.getenv('CLIENT_SECRETS_DATA')
+    if client_data:
+        with open("client_secrets.json", "w") as f:
+            f.write(client_data)
+        gauth.LoadClientConfigFile("client_secrets.json")
+
+    # 2. Cargar el token de usuario (lo que antes era mycreds.txt)
+    creds_data = os.getenv('GOOGLE_CREDENTIALS_DATA')
+    if creds_data:
+        # Guardar temporalmente para que PyDrive lo lea
+        with open("mycreds.txt", "w") as f:
+            f.write(creds_data)
+        gauth.LoadCredentialsFile("mycreds.txt")
+
+    if gauth.credentials is None:
+        # ERROR: En el servidor no podemos hacer .LocalWebserverAuth()
+        # Debes haber generado el mycreds.txt localmente primero
+        raise Exception("Credenciales no encontradas. Genera mycreds.txt localmente y súbelo como variable de entorno.")
+    elif gauth.access_token_expired:
+        gauth.Refresh()
+    else:
+        gauth.Authorize()
+
+    return GoogleDrive(gauth)
+Usa el código con precaución.
+
+4. El problema de la carpeta uploads
+Vercel: No permite escribir archivos en carpetas. Tu código archivo.save(ruta_local) fallará. Debes subir el archivo directamente a Drive desde la memoria (RAM) usando io.BytesIO.
+Railway: Sí permite carpetas temporales, pero asegúrate de usar /tmp/ en lugar de uploads/ porque es la carpeta estándar de Linux para archivos temporales.
+Modificación para /tmp/ (Recomendado para Railway):
+python
+app.config['UPLOAD_FOLDER'] = '/tmp' # En Linux/Railway los temporales van aquí
+Usa el código con precaución.
+
+5. Resumen de archivos a subir a GitHub
+Para que funcione en el servidor, tu repositorio debe tener:
+app.py
+requirements.txt (con gspread, pydrive2, flask, google-api-python-client)
+NO SUBAS client_secrets.json ni mycreds.txt (estarán en las variables de entorno del servidor).
+Consejo final: Railway es mucho más amigable para aplicaciones Flask que necesitan manejar pequeños archivos temporales antes de subirlos a Drive. Vercel está más orientado a aplicaciones Frontend o APIs puras sin estado.
