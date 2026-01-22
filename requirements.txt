@@ -2,5 +2,7 @@ Flask
 gspread
 oauth2client
 pydrive2
+google-api-python-client
+gunicorn
 
 

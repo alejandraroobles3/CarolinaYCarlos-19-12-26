@@ -2,7 +2,7 @@ Desplegar una aplicación que usa OAuth2 en servidores "Serverless" como Vercel 
 Aquí las modificaciones necesarias para 2026:
 1. Configurar la "URI de Redirección" en Google Cloud
 Como ya no estarás en localhost, Google debe saber a dónde enviar el token:
-Ve a Google Cloud Console.
+Ve a Google Cloud  Console.
 En Credenciales, edita tu "ID de cliente OAuth".
 En URIs de redireccionamiento autorizados, añade la URL de tu app en producción:
 https://tu-app.railway.app (ejemplo).
