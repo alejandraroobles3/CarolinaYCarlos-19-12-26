@@ -22,50 +22,38 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 def login_drive():
     gauth = GoogleAuth()
     
-    # 1. Manejar client_secrets.json desde variable de entorno
+    # 1. Forzar la carga de secretos desde la variable de entorno
     client_secrets_data = os.environ.get("GDRIVE_CLIENT_SECRETS_DATA")
-    if client_secrets_data:
-        # Pydrive2 espera un archivo, así que creamos uno temporalmente
-        with open("client_secrets.json", "w") as f:
-            f.write(client_secrets_data)
-        gauth.client_config_file = "client_secrets.json"
-
-
-    # 2. Manejar mycreds.txt (tokens de acceso) desde variable de entorno
-    creds_data = os.environ.get("GDRIVE_CREDENTIALS_DATA")
+    if not client_secrets_data:
+        raise Exception("ERROR: La variable GDRIVE_CLIENT_SECRETS_DATA está vacía.")
     
+    # Escribir el archivo físico que pydrive2 exige
+    with open("client_secrets.json", "w") as f:
+        f.write(client_secrets_data)
+    
+    # Configurar pydrive para usar ese archivo
+    gauth.LoadClientConfigFile("client_secrets.json")
+
+    # 2. Cargar tokens (mycreds)
+    creds_data = os.environ.get("GDRIVE_CREDENTIALS_DATA")
     if creds_data:
-        # Crea un archivo temporal con los datos de la variable
         with open("mycreds.txt", "w") as f:
             f.write(creds_data)
-    
-    # Carga el archivo (ya sea el que acabamos de crear o el local si estamos en desarrollo)
-    try:
         gauth.LoadCredentialsFile("mycreds.txt")
-    except Exception as e:
-        print(f"Error cargando mycreds.txt: {e}")
-
+    
+    # 3. Lógica de autenticación sin navegador
     if gauth.credentials is None:
-        # Esta parte solo funciona en local con navegador
-        print("Autenticación local requerida por primera vez.")
-        gauth.LocalWebserverAuth()
-        
+        # Si llega aquí en Railway, va a fallar porque no puede abrir navegador
+        # Debes asegurarte de que GDRIVE_CREDENTIALS_DATA sea válido
+        raise Exception("Error: No hay credenciales válidas en GDRIVE_CREDENTIALS_DATA. Genera el archivo mycreds.txt en tu PC primero.")
     elif gauth.access_token_expired:
+        print("Token expirado, refrescando...")
         gauth.Refresh()
     else:
         gauth.Authorize()
     
-    # Guarda las credenciales corregidas localmente (útil en local)
-    gauth.SaveCredentialsFile("mycreds.txt")
-    
-    # Intenta borrar los archivos temporales después de usarlos en memoria
-    if os.path.exists("client_secrets.json"):
-        os.remove("client_secrets.json")
-    if os.path.exists("mycreds.txt") and creds_data:
-        # Solo borra mycreds.txt si lo creamos desde la variable de entorno
-        os.remove("mycreds.txt")
-        
     return GoogleDrive(gauth)
+
 
 
 # --- Inicialización de servicios ---
