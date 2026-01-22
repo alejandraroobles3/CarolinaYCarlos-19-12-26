@@ -6,6 +6,27 @@ body{
     height: 100vh;           /* altura completa de la ventana */
     margin: 0;
 }
+
+/* Quita el resaltado azul en móviles */
+button, 
+a, 
+input, 
+select, 
+textarea,
+div[role="button"] {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    outline: none;
+}
+
+/* Evita el contorno azul de enfoque (accesibilidad) */
+button:focus, 
+a:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+
 .card {
   position: relative;
   margin: auto;
