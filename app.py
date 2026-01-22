@@ -1,67 +1,108 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 import time
 import os
+# Importamos la librería json para manejar el contenido de las variables
+import json 
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 import gspread
 from pydrive2.auth import GoogleAuth
 from pydrive2.drive import GoogleDrive
 
-#para activar entorno virtual es:
-#venv\Scripts\activate.bat
-#y luego python app.py
+# NOTA: Para este código, necesitarás definir 3 variables de entorno en Railway/Local:
+# 1. GDRIVE_CREDENTIALS_DATA (El contenido de tu mycreds.txt)
+# 2. GDRIVE_CLIENT_SECRETS_DATA (El contenido de tu client_secrets.json)
+# 3. GOOGLE_SHEETS_SERVICE_ACCOUNT (El contenido de tu service_account.json para gspread)
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER']='uploads'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
+
 def login_drive():
     gauth = GoogleAuth()
-    # Carga credenciales guardadas
-    gauth.LoadCredentialsFile("mycreds.txt")
     
+    # 1. Manejar client_secrets.json desde variable de entorno
+    client_secrets_data = os.environ.get("GDRIVE_CLIENT_SECRETS_DATA")
+    if client_secrets_data:
+        # Pydrive2 espera un archivo, así que creamos uno temporalmente
+        with open("client_secrets.json", "w") as f:
+            f.write(client_secrets_data)
+        gauth.client_config_file = "client_secrets.json"
+
+
+    # 2. Manejar mycreds.txt (tokens de acceso) desde variable de entorno
+    creds_data = os.environ.get("GDRIVE_CREDENTIALS_DATA")
+    
+    if creds_data:
+        # Crea un archivo temporal con los datos de la variable
+        with open("mycreds.txt", "w") as f:
+            f.write(creds_data)
+    
+    # Carga el archivo (ya sea el que acabamos de crear o el local si estamos en desarrollo)
+    try:
+        gauth.LoadCredentialsFile("mycreds.txt")
+    except Exception as e:
+        print(f"Error cargando mycreds.txt: {e}")
+
     if gauth.credentials is None:
-        # IMPORTANTE: Configurar acceso offline para obtener el refresh_token
-        # y permitir que el servidor funcione sin intervención humana después
-        auth_url = gauth.GetAuthUrl() # Genera la URL
-        
-        # Estas dos líneas son la clave:
-        gauth.GetFlow()
-        gauth.flow.params.update({'access_type': 'offline'})
-        gauth.flow.params.update({'approval_prompt': 'force'})
-        
-        # Abre el navegador para loguear
+        # Esta parte solo funciona en local con navegador
+        print("Autenticación local requerida por primera vez.")
         gauth.LocalWebserverAuth()
         
     elif gauth.access_token_expired:
-        # Ahora gauth.Refresh() funcionará porque tendrá el token de refresco
         gauth.Refresh()
     else:
         gauth.Authorize()
     
-    # Guarda las credenciales corregidas
+    # Guarda las credenciales corregidas localmente (útil en local)
     gauth.SaveCredentialsFile("mycreds.txt")
+    
+    # Intenta borrar los archivos temporales después de usarlos en memoria
+    if os.path.exists("client_secrets.json"):
+        os.remove("client_secrets.json")
+    if os.path.exists("mycreds.txt") and creds_data:
+        # Solo borra mycreds.txt si lo creamos desde la variable de entorno
+        os.remove("mycreds.txt")
+        
     return GoogleDrive(gauth)
 
 
-# Inicializamos Drive y Sheets
-drive = login_drive()
+# --- Inicialización de servicios ---
 
-# Para Sheets, usaremos la misma autenticación de drive
-# gspread puede usar las credenciales de pydrive2
-gc = gspread.authorize(drive.auth.credentials)
+# Para Sheets, usaremos un enfoque de Cuenta de Servicio (Service Account)
+# que es mucho mejor para servidores que usar las credenciales del Drive personal.
+
+# 3. Leer Service Account desde variable de entorno
+service_account_data = os.environ.get("GOOGLE_SHEETS_SERVICE_ACCOUNT")
+
+if service_account_data:
+    # Creamos un archivo temporal para gspread
+    with open("service_account.json", "w") as f:
+        f.write(service_account_data)
+    
+    # Autenticar gspread usando el archivo temporal
+    gc = gspread.service_account(filename="service_account.json")
+    os.remove("service_account.json") # Borrar archivo temporal inmediatamente
+else:
+    # Si la variable no existe (ej. en desarrollo local sin configurar), usar el método anterior
+    drive = login_drive()
+    gc = gspread.authorize(drive.auth.credentials)
+
+
 SHEET_ID = "1My2rjonxDkY1CsLDsOmC1N_j60DdfH5RB2EcMSlqlOE"
 sheet = gc.open_by_key(SHEET_ID).sheet1
 
 
 ID_CARPETA_DESTINO = '1K-uqMefDDWUruS_9tHItqmHl5X4xtcww'
 
+# ... El resto de tus rutas (@app.route) permanecen sin cambios ...
+
 @app.route("/")
 def index():
     #aqui ponemos la carga? 
     #se necesita poner el envio y eso de lo que se recolecte
     return render_template("loading.html")
-
 
 @app.route("/process-task")
 def process_task():
@@ -103,6 +144,8 @@ def enviar():
 
             try:
                 # Subida directa usando TU espacio de 15GB
+                # NOTA: Debes acceder a la variable global 'drive' si no usas la Service Account
+                global drive 
                 archivo_drive = drive.CreateFile({
                     'title': filename,
                     'parents': [{'id': ID_CARPETA_DESTINO}]
@@ -155,6 +198,9 @@ def enviar():
     else:
         return render_template("index.html")
 
+
 if __name__ == "__main__":
+    # Asegúrate de tener gunicorn instalado y usar un Procfile para Railway
     port = int(os.environ.get("PORT",5000))
+    # use_reloader=False es importante para evitar la doble ejecución
     app.run(host="0.0.0.0", use_reloader=False, port=port)
