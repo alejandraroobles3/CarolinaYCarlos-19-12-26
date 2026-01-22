@@ -17,23 +17,32 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 def login_drive():
     gauth = GoogleAuth()
-    # Intenta cargar credenciales guardadas
+    # Carga credenciales guardadas
     gauth.LoadCredentialsFile("mycreds.txt")
     
     if gauth.credentials is None:
-        # Si no existen, abre el navegador para loguear
-        # Requiere el archivo client_secrets.json en la misma carpeta
+        # IMPORTANTE: Configurar acceso offline para obtener el refresh_token
+        # y permitir que el servidor funcione sin intervención humana después
+        auth_url = gauth.GetAuthUrl() # Genera la URL
+        
+        # Estas dos líneas son la clave:
+        gauth.GetFlow()
+        gauth.flow.params.update({'access_type': 'offline'})
+        gauth.flow.params.update({'approval_prompt': 'force'})
+        
+        # Abre el navegador para loguear
         gauth.LocalWebserverAuth()
+        
     elif gauth.access_token_expired:
-        # Si el token expiró, lo refresca
+        # Ahora gauth.Refresh() funcionará porque tendrá el token de refresco
         gauth.Refresh()
     else:
-        # Inicializa con las credenciales cargadas
         gauth.Authorize()
     
-    # Guarda las credenciales para la próxima vez
+    # Guarda las credenciales corregidas
     gauth.SaveCredentialsFile("mycreds.txt")
     return GoogleDrive(gauth)
+
 
 # Inicializamos Drive y Sheets
 drive = login_drive()
@@ -84,10 +93,11 @@ def enviar():
         siva=request.form.get("asiste")
 
         archivo = request.files.get('foto')
+        link_drive='-'
 
         
         if archivo and archivo.filename:
-            filename = f"{nombre}_{apellido}_{int(time.time())}_{archivo.filename}"
+            filename = f"{nombre}_{apellido}_{int(time.time())}"
             ruta_local = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             archivo.save(ruta_local)
 
@@ -146,4 +156,4 @@ def enviar():
         return render_template("index.html")
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, use_reloader=False)
