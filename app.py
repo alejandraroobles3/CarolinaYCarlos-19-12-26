@@ -98,59 +98,7 @@ def pagina():
     else: 
         return render_template("index.html")
 
-@app.route("/enviar", methods=["POST","GET"])
-def enviar():
-    if request.method == "POST":
-        nombre = request.form.get("nombre")
-        apellido = request.form.get("apellido")
-        adultos = request.form.get("adultos")
-        ninios = request.form.get("ninios")
-        siva = request.form.get("asiste")
-        archivo = request.files.get('foto')
-        link_drive = '-'
 
-        if archivo and archivo.filename:
-            filename = f"{nombre}_{apellido}_{int(time.time())}"
-            ruta_local = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            archivo.save(ruta_local)
-
-            try:
-                # CAMBIO CLAVE AQUÍ: Usamos get_drive() en lugar de la variable global directa
-                drive = get_drive() 
-                
-                archivo_drive = drive.CreateFile({
-                    'title': filename,
-                    'parents': [{'id': ID_CARPETA_DESTINO}]
-                })
-                archivo_drive.SetContentFile(ruta_local)
-                archivo_drive.Upload()
-
-                archivo_drive.InsertPermission({
-                    'type': 'anyone',
-                    'value': 'anyone',
-                    'role': 'reader'
-                })
-
-                link_drive = archivo_drive['alternateLink']
-
-            except Exception as e:
-                print(f"Error al subir a Drive: {e}")
-                link_drive = "Error en la subida"
-            finally:
-                if ruta_local and os.path.exists(ruta_local):
-                    try:
-                        time.sleep(0.2) 
-                        os.remove(ruta_local)
-                    except: pass
-
-        try:
-            sheet.append_row([nombre, apellido, siva, adultos, ninios, link_drive])
-        except Exception as e:
-            print(f"Error en Sheets: {e}")
-
-        return render_template("exito.html")
-    
-    return render_template("index.html")
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
